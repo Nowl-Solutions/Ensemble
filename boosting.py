@@ -72,7 +72,6 @@ def fit_boosting(base_models, X_train, y_train, n_rounds=N_ROUNDS, seed=SEED):
     models = []
     model_weights = []
 
-    # ฝึกทีละรอบ เพราะรอบถัดไปต้องใช้น้ำหนักที่อัปเดตจากรอบนี้
     for round_number in range(n_rounds):
         # % ทำให้วนกลับไปชื่อแรกเมื่อใช้ครบทุกชนิด
         model_name = model_names[round_number % len(model_names)]
