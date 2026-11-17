@@ -109,3 +109,19 @@ seed. The scaler and estimator both learn from the sampled bag.
 
 A bootstrap can omit classes, especially for small datasets. This helper does
 not retry such bags; estimator fitting errors propagate to its caller.
+
+## fit_bagging(base_models, X_train, y_train, n_jobs=4, seed=42)
+
+Source: [bagging.py](../bagging.py).
+
+Accepts an ordered dictionary of names to estimators and returns a list of
+fitted pipelines in dictionary order. There is one learner per entry.
+Learner i uses seed + i, starting at zero.
+
+Use n_jobs=1 for sequential execution or -1 to request all available CPUs.
+The implementation selects joblib's loky backend and limits inner worker
+threads to one. Worker startup is part of the calling script's training timer.
+
+An empty model dictionary, n_jobs=0, or a negative seed raises ValueError.
+The names are labels for dictionary entries, not a factory lookup:
+pass estimator objects as the values.
