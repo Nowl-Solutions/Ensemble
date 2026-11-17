@@ -125,3 +125,25 @@ threads to one. Worker startup is part of the calling script's training timer.
 An empty model dictionary, n_jobs=0, or a negative seed raises ValueError.
 The names are labels for dictionary entries, not a factory lookup:
 pass estimator objects as the values.
+
+## predict_bagging(models, X)
+
+Source: [bagging.py](../bagging.py).
+
+Returns a one-dimensional NumPy array with one voted label per input row.
+Each fitted model predicts the same X; the function counts labels per row.
+A tied vote selects the first label in NumPy's sorted unique-label order.
+
+```python
+from base_models import make_classifiers
+from iris_baseline import load_iris_split
+from bagging import fit_bagging, predict_bagging
+
+X_train, X_test, y_train, _, encoder = load_iris_split()
+models = fit_bagging(make_classifiers(), X_train, y_train, n_jobs=1)
+names = encoder.inverse_transform(predict_bagging(models, X_test))
+```
+
+An empty models list raises ValueError. Pass raw, unscaled features when using
+the returned training pipelines; each pipeline applies its own fitted scaler.
+This function returns labels, not probabilities or confidence scores.
