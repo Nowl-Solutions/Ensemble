@@ -147,3 +147,19 @@ names = encoder.inverse_transform(predict_bagging(models, X_test))
 An empty models list raises ValueError. Pass raw, unscaled features when using
 the returned training pipelines; each pipeline applies its own fitted scaler.
 This function returns labels, not probabilities or confidence scores.
+
+## train_one_round(base_model, X_train, y_train, sample_weights, seed)
+
+Source: [boosting.py](../boosting.py).
+
+Returns a fitted scale/model Pipeline around a cloned estimator. Supply one
+nonnegative sample weight per training row, normalized to sum to one.
+
+For KNeighborsClassifier, it samples len(X_train) rows with replacement using
+sample_weights as sampling probabilities, then fits the pipeline on that bag.
+For other estimators, it fits on all training rows and passes
+sample_weights * len(X_train) as model__sample_weight.
+
+Custom non-KNN estimators must accept sample_weight in fit. In the direct
+weight path, weights are passed to the estimator, not the StandardScaler.
+If the estimator exposes random_state, it is set to seed.
