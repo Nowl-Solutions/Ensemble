@@ -59,3 +59,16 @@ desired training order when calling the ensemble functions.
 The factory does not add scaling. Ensemble training functions wrap each model
 in a StandardScaler pipeline. The svm factory does not enable probability
 estimation; the voting code uses class predictions.
+
+## make_regressors()
+
+Source: [base_models.py](../base_models.py).
+
+Returns fresh, unfitted estimators with keys `linear_regression`,
+`knn_regression`, and `svm_regression`. Their configurations are
+LinearRegression(), KNeighborsRegressor(n_neighbors=5), and SVR(kernel="rbf").
+
+Choose a numeric target and remove it from the input features. For example,
+when predicting PetalLengthCm, use the other three measurements as inputs.
+The classifier voting functions are not regression aggregation functions:
+do not pass these regressors to predict_bagging or predict_boosting.
