@@ -72,3 +72,25 @@ Choose a numeric target and remove it from the input features. For example,
 when predicting PetalLengthCm, use the other three measurements as inputs.
 The classifier voting functions are not regression aggregation functions:
 do not pass these regressors to predict_bagging or predict_boosting.
+
+## make_kmeans(random_state=42)
+
+Source: [base_models.py](../base_models.py).
+
+Returns a fresh KMeans(n_clusters=3, n_init=10, random_state=random_state).
+It is not fitted and does not include a scaler.
+
+```python
+from sklearn.pipeline import make_pipeline
+from sklearn.preprocessing import StandardScaler
+from base_models import make_kmeans
+from iris_baseline import load_iris_split
+
+X_train, X_test, _, _, _ = load_iris_split()
+clustering = make_pipeline(StandardScaler(), make_kmeans())
+clustering.fit(X_train)
+cluster_ids = clustering.predict(X_test)
+```
+
+Cluster IDs are not the label encoder's Species codes. Comparing these IDs
+directly with y_test does not measure classification accuracy.
