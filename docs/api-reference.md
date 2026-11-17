@@ -94,3 +94,18 @@ cluster_ids = clustering.predict(X_test)
 
 Cluster IDs are not the label encoder's Species codes. Comparing these IDs
 directly with y_test does not measure classification accuracy.
+
+## train_one_bag(base_model, X_train, y_train, seed)
+
+Source: [bagging.py](../bagging.py).
+
+Returns a fitted Pipeline with steps named `scale` and `model`.
+It draws len(X_train) indices with replacement and uses the same indices for
+features and targets. Pass NumPy arrays suitable for integer-array indexing.
+
+The estimator is cloned before fitting, so the supplied base_model is not
+trained in place. If it exposes random_state, that parameter is replaced by
+seed. The scaler and estimator both learn from the sampled bag.
+
+A bootstrap can omit classes, especially for small datasets. This helper does
+not retry such bags; estimator fitting errors propagate to its caller.
