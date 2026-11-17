@@ -38,3 +38,24 @@ The default split is stratified and yields 120 training and 30 test rows for
 the bundled Iris CSV. Arrays are unscaled: fit preprocessing using training
 data only. The CSV path is relative to the module, not the working directory.
 Changing random_state changes the split.
+
+## make_classifiers(random_state=42)
+
+Source: [base_models.py](../base_models.py).
+
+Returns a new dictionary of unfitted estimators on every call:
+
+| Key | Estimator configuration |
+| --- | --- |
+| logistic_regression | LogisticRegression(max_iter=1000) |
+| knn | KNeighborsClassifier(n_neighbors=5) |
+| svm | SVC(kernel="rbf", random_state=random_state) |
+| naive_bayes | GaussianNB() |
+
+The factory order is the table order. The ensemble scripts explicitly select
+a different order, beginning with svm. Construct your own dictionary in the
+desired training order when calling the ensemble functions.
+
+The factory does not add scaling. Ensemble training functions wrap each model
+in a StandardScaler pipeline. The svm factory does not enable probability
+estimation; the voting code uses class predictions.
