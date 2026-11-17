@@ -206,3 +206,23 @@ fit_boosting supplies those entries in sorted order.
 Empty models or a different number of models and weights raises ValueError.
 This helper does not validate every supplied weight or reject predictions
 outside classes; preserve the fitted outputs when using this API.
+
+## evaluate(method, predictions, y_test, model_count, training_seconds, test_seconds)
+
+Source: [compare_models.py](../compare_models.py).
+
+Pass equally sized NumPy prediction and target arrays. Returns a dictionary:
+
+| Field | Meaning |
+| --- | --- |
+| method, model_count | Caller-supplied method label and learner count |
+| correct, test_samples | Correct predictions and number of target rows |
+| accuracy, macro_f1 | Accuracy and macro F1 with zero_division=0 |
+| training_seconds, test_seconds | Caller-supplied durations in seconds |
+| confusion_matrix | Nested list produced by confusion_matrix |
+| predictions | Prediction array converted to a list |
+
+The function computes metrics; it does not time training or prediction.
+The confusion matrix uses the labels present in the targets or predictions,
+in the metric's default order, because no explicit labels argument is passed.
+Timing values remain in seconds in JSON even when terminal output uses ms.
