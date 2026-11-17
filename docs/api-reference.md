@@ -163,3 +163,22 @@ sample_weights * len(X_train) as model__sample_weight.
 Custom non-KNN estimators must accept sample_weight in fit. In the direct
 weight path, weights are passed to the estimator, not the StandardScaler.
 If the estimator exposes random_state, it is set to seed.
+
+## fit_boosting(base_models, X_train, y_train, n_rounds=4, seed=42)
+
+Source: [boosting.py](../boosting.py).
+
+Returns `(models, model_weights, classes)`: a list of fitted pipelines,
+a NumPy array of voting weights, and sorted unique training labels.
+The supplied dictionary order determines the learner sequence; additional
+rounds cycle through that sequence with fresh clones.
+
+It rejects empty model dictionaries, fewer than one round, negative seeds,
+and training labels containing fewer than two classes. A round is skipped
+when its weighted error reaches the SAMME threshold (with a 1e-12 tolerance).
+If every round is skipped, it raises ValueError.
+
+A learner that predicts every training row correctly receives weight equal
+to the sum of previous accepted weights plus one, then training stops.
+Consequently, len(models) can be smaller than n_rounds. Console output reports
+accepted or skipped rounds; the function does not save model files.
