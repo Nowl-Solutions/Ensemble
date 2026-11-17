@@ -226,3 +226,31 @@ The function computes metrics; it does not time training or prediction.
 The confusion matrix uses the labels present in the targets or predictions,
 in the metric's default order, because no explicit labels argument is passed.
 Timing values remain in seconds in JSON even when terminal output uses ms.
+
+## run_comparison(n_jobs=4, seed=42)
+
+Source: [compare_models.py](../compare_models.py).
+
+Returns a report dictionary for Single SVM, Bagging (4 types), and
+Boosting (4 types). It splits the data once and shares that split across all
+three methods. Here seed controls both the split and ensemble randomization.
+In contrast, the bagging.py and boosting.py CLI --seed options leave their
+default train/test split unchanged.
+
+```python
+from compare_models import run_comparison
+report = run_comparison(n_jobs=1, seed=42)
+for row in report["results"]:
+    print(row["method"], row["accuracy"])
+```
+
+The report includes dataset, seed, train_samples, test_samples, features,
+classes, ensemble_models, bagging_n_jobs, boosting_requested_rounds,
+boosting_model_weights, y_test, and results. Each results entry follows the
+evaluate schema above. Timings measure one run and can change across runs.
+
+Calling this function does not write JSON. Running
+`python compare_models.py` invokes main(), which writes
+`results/model_comparison.json`. Running `python plot_comparison.py` then
+reads that report and writes the accuracy/training-time and test-time PNG/SVG
+charts without retraining models.
