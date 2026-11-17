@@ -182,3 +182,27 @@ A learner that predicts every training row correctly receives weight equal
 to the sum of previous accepted weights plus one, then training stops.
 Consequently, len(models) can be smaller than n_rounds. Console output reports
 accepted or skipped rounds; the function does not save model files.
+
+## predict_boosting(models, model_weights, classes, X)
+
+Source: [boosting.py](../boosting.py).
+
+Pass the three outputs of fit_boosting without reordering them:
+
+```python
+from base_models import make_classifiers
+from iris_baseline import load_iris_split
+from boosting import fit_boosting, predict_boosting
+
+X_train, X_test, y_train, _, _ = load_iris_split()
+models, weights, classes = fit_boosting(make_classifiers(), X_train, y_train)
+predictions = predict_boosting(models, weights, classes, X_test)
+```
+
+Each learner adds its weight to the class it predicts. The return value is
+a one-dimensional label array. A tie selects the earliest entry in classes;
+fit_boosting supplies those entries in sorted order.
+
+Empty models or a different number of models and weights raises ValueError.
+This helper does not validate every supplied weight or reject predictions
+outside classes; preserve the fitted outputs when using this API.
