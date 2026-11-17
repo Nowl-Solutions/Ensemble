@@ -1,4 +1,4 @@
-"""Ensemble หลายชนิดสำหรับ Iris: สุ่มข้อมูล → ฝึกขนาน → โหวตคำตอบ"""
+
 
 import argparse
 from time import perf_counter
